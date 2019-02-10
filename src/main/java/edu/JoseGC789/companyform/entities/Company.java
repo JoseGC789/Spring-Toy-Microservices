@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -23,9 +24,9 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "id")
 @Table(name = "companies")
-public class Company{
+public final class Company{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -33,12 +34,5 @@ public class Company{
 
     @Column(name = "name")
     private String name;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    private Person owner;
-
-    @Column(name = "clients")
-    @OneToMany(fetch = FetchType.LAZY)
-    private Set<Person> clients;
 
 }

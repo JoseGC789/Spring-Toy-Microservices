@@ -1,34 +1,37 @@
 package edu.JoseGC789.companyform.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import edu.JoseGC789.companyform.entities.Person;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import javax.persistence.Embeddable;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import static edu.JoseGC789.companyform.dtos.ClientDTO.Role.CLIENT;
+import static edu.JoseGC789.companyform.entities.Person.Role.CLIENT;
 
 @Getter
-@ToString
-@EqualsAndHashCode
-@Embeddable
 @Setter
-@AllArgsConstructor
+@ToString
+@EqualsAndHashCode(of = "id")
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
+@JsonDeserialize(builder = ClientDTO.ClientDTOBuilder.class)
 public final class ClientDTO{
-    @Min(0)
-    @Setter
     private Long id;
 
-    @JsonIgnore
-    private Role role;
-
     @Size(max = 100)
-    private String name;
+    @NotEmpty
+    private final String name;
 
-    public enum Role{
-        CLIENT
+    private final Person.Role role = CLIENT;
+
+    @JsonPOJOBuilder(withPrefix = "")
+    public static class ClientDTOBuilder{
+
     }
 }
