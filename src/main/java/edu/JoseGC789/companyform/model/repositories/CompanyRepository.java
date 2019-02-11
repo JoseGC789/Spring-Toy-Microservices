@@ -1,6 +1,6 @@
-package edu.JoseGC789.companyform.repositories;
+package edu.JoseGC789.companyform.model.repositories;
 
-import edu.JoseGC789.companyform.entities.Company;
+import edu.JoseGC789.companyform.model.domain.entities.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

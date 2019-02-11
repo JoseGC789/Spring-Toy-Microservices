@@ -1,4 +1,4 @@
-package edu.JoseGC789.companyform.entities;
+package edu.JoseGC789.companyform.model.domain.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,21 +20,13 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(of = "id")
-@Table(name = "persons")
-public final class Person{
+@Table(name = "companies")
+public final class Company{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "role")
-    private Role role;
-
     @Column(name = "name")
     private String name;
-
-    public enum Role{
-        OWNER,
-        CLIENT
-    }
 }
