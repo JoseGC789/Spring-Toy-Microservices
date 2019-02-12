@@ -12,6 +12,8 @@ import lombok.ToString;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Set;
+import java.util.stream.Collectors;
 import static lombok.AccessLevel.PRIVATE;
 
 @Getter
@@ -29,9 +31,17 @@ public final class CompanyDto{
     @Size(max = 100)
     private final String name;
 
+    @NotNull
+    private final PersonDto owner;
+
+    @NotNull
+    private final Set<PersonDto> employees;
+
     public CompanyDto(Company company){
         this.id = company.getId();
         this.name = company.getName();
+        this.owner = new PersonDto(company.getOwner());
+        this.employees = company.getEmployees().stream().map(PersonDto::new).collect(Collectors.toSet());
     }
 
     @JsonPOJOBuilder(withPrefix = "")

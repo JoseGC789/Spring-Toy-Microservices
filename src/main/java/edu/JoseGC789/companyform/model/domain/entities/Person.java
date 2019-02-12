@@ -7,22 +7,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.MappedSuperclass;
 
-@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(of = "id")
-@Table(name = "persons")
-public final class Person{
+@MappedSuperclass
+public abstract class Person{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -30,16 +27,4 @@ public final class Person{
 
     @Column(name = "name")
     private String name;
-
-    @Column(name = "role")
-    private Role role;
-
-    @ManyToOne
-    @Column(name = "Business")
-    private Company business;
-
-    public enum Role{
-        EMPLYOEE,
-        OWNER
-    }
 }

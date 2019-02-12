@@ -11,7 +11,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -29,4 +32,12 @@ public final class Company{
 
     @Column(name = "name")
     private String name;
+
+    @OneToOne
+    @Column(name = "owner")
+    private Owner owner;
+
+    @OneToMany
+    @Column(name = "employees")
+    private Set<Employee> employees;
 }

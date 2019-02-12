@@ -29,17 +29,9 @@ public final class PersonDto{
     @NotNull
     private final String name;
 
-    @NotNull
-    private final Person.Role role;
-
-    @NotNull
-    private final CompanyDto business;
-
     public PersonDto(Person person){
         this.id = person.getId();
         this.name = person.getName();
-        this.role = person.getRole();
-        this.business = new CompanyDto(person.getBusiness());
 
     }
 
