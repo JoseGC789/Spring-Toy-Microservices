@@ -13,7 +13,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 @Qualifier("company")
-public final class CompanyCRService implements CRService<CompanyDto, Long>{
+public class CompanyCRService implements CRService<CompanyDto, Long>{
     private final CompanyRepository companyRepository;
     private final DozerBeanMapper mapper;
 
