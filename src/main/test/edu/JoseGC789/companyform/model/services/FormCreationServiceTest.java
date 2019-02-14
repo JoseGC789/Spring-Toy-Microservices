@@ -13,8 +13,9 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Collections;
 import java.util.stream.Collectors;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
-import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FormCreationServiceTest{
