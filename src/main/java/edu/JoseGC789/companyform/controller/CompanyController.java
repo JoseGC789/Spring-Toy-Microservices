@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
-@RestController("/form/companies")
+@RestController
 public class CompanyController{
     private final CRService<CompanyDto, Long> companyService;
 
@@ -21,7 +21,7 @@ public class CompanyController{
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/form/companies/{id}")
     @ApiOperation(
             value = "Returns a single persisted company",
             notes = "Given company id"
@@ -35,7 +35,7 @@ public class CompanyController{
         return ResponseEntity.ok(companyService.read(id));
     }
 
-    @GetMapping
+    @GetMapping("/form/companies")
     @ApiOperation(
             value = "Returns all persisted companies",
             notes = "No arguments"

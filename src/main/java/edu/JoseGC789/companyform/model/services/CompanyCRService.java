@@ -3,7 +3,7 @@ package edu.JoseGC789.companyform.model.services;
 import edu.JoseGC789.companyform.model.domain.dtos.CompanyDto;
 import edu.JoseGC789.companyform.model.domain.entities.Company;
 import edu.JoseGC789.companyform.model.repositories.CompanyRepository;
-import edu.JoseGC789.companyform.model.helpers.DtoConverter;
+import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,16 +15,16 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Qualifier("company")
 public final class CompanyCRService implements CRService<CompanyDto, Long>{
     private final CompanyRepository companyRepository;
-    private final DtoConverter convert;
+    private final DozerBeanMapper mapper;
 
-    public CompanyCRService(CompanyRepository companyRepository, DtoConverter convert){
+    public CompanyCRService(CompanyRepository companyRepository, DozerBeanMapper mapper){
         this.companyRepository = companyRepository;
-        this.convert = convert;
+        this.mapper = mapper;
     }
 
     @Override
     public CompanyDto create(final CompanyDto companyDTO){
-        final Company company = companyRepository.save(convert.toEntity(companyDTO, Company::new));
+        final Company company = companyRepository.save(mapper.map(companyDTO,Company.class));
         return new CompanyDto(company);
     }
 

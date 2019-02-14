@@ -12,7 +12,7 @@ import lombok.ToString;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 import static lombok.AccessLevel.PRIVATE;
 
@@ -35,13 +35,13 @@ public final class CompanyDto{
     private final PersonDto owner;
 
     @NotNull
-    private final Set<PersonDto> employees;
+    private final List<PersonDto> employees;
 
     public CompanyDto(Company company){
         this.id = company.getId();
         this.name = company.getName();
         this.owner = new PersonDto(company.getOwner());
-        this.employees = company.getEmployees().stream().map(PersonDto::new).collect(Collectors.toSet());
+        this.employees = company.getEmployees().stream().map(PersonDto::new).collect(Collectors.toList());
     }
 
     @JsonPOJOBuilder(withPrefix = "")

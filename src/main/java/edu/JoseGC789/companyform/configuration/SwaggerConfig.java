@@ -18,7 +18,7 @@ public class SwaggerConfig{
     public Docket documentation() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("org.springframework.boot"))
+                .apis(RequestHandlerSelectors.basePackage("edu.JoseGC789.companyform"))
                 .build()
                 .pathMapping("/")
                 .apiInfo(info())

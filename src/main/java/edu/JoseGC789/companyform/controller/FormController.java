@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
-@RestController("/form")
+@RestController
 @Validated
 public class FormController{
     private final CreationService<CompanyDto> formService;
@@ -22,7 +22,7 @@ public class FormController{
         this.formService = formService;
     }
 
-    @PostMapping
+    @PostMapping("/form")
     @ApiOperation(
             value = "Returns all persisted companies",
             notes = "Given CompanyDto"
@@ -32,6 +32,13 @@ public class FormController{
             @ApiResponse(code = 500, message = "Internal server error")
     })
     public ResponseEntity<CompanyDto> postCompany(@Valid @RequestBody final CompanyDto companyBody){
-        return ResponseEntity.ok(formService.create(companyBody));
+        return ResponseEntity.ok(formService.create(nullIds(companyBody)));
+    }
+
+    private static CompanyDto nullIds(CompanyDto companyDto){
+        companyDto.setId(null);
+        companyDto.getOwner().setId(null);
+        companyDto.getEmployees().forEach(personDto -> personDto.setId(null));
+        return companyDto;
     }
 }
