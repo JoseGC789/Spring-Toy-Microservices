@@ -26,7 +26,7 @@ import static javax.persistence.CascadeType.ALL;
 @ToString
 @EqualsAndHashCode(of = "id")
 @Table(name = "companies")
-public final class Company{
+public class Company{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
