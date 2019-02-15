@@ -3,6 +3,7 @@ package edu.JoseGC789.companyform.controller;
 import edu.JoseGC789.companyform.model.domain.dtos.CompanyDto;
 import edu.JoseGC789.companyform.model.domain.dtos.PersonDto;
 import edu.JoseGC789.companyform.model.domain.entities.Company;
+import edu.JoseGC789.companyform.model.domain.entities.Employee;
 import edu.JoseGC789.companyform.model.domain.entities.Owner;
 import edu.JoseGC789.companyform.model.services.FormCreationService;
 import org.junit.Before;
@@ -13,8 +14,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.ResponseEntity;
-import java.util.Collections;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
@@ -28,29 +30,56 @@ public class FormControllerTest{
     @InjectMocks
     private FormController formController;
 
-    private Company company;
     private CompanyDto expected;
+
+    private PersonDto spyOwner;
+    private CompanyDto spyCompany;
+    private List<PersonDto> spyEmployeeList;
+    private PersonDto spyEmployee;
 
     @Before
     public void setup(){
-        company = new Company(1L, "company_name", new Owner(), Collections.emptyList());
-        company.getOwner().setId(1L);
-        company.getOwner().setName("Owner name");
+        Owner owner = new Owner();
+        owner.setId(2L);
+        owner.setName("owner name");
+
+        Employee employee = new Employee();
+        employee.setId(4L);
+        employee.setName("employee abc");
+
+        Company company = new Company(1L, "company_name", owner, Arrays.asList(employee,employee,employee));
+
         CompanyDto.CompanyDtoBuilder builder = CompanyDto.builder();
+
+        spyOwner = Mockito.spy(new PersonDto(owner));
+        spyEmployee = Mockito.spy(new PersonDto(employee));
+        spyEmployeeList = Mockito.spy(new ArrayList<>());
+        spyEmployeeList.add(spyEmployee);
+        spyEmployeeList.add(spyEmployee);
+        spyEmployeeList.add(spyEmployee);
+        spyEmployeeList.add(spyEmployee);
+
         expected = builder
                 .id(company.getId())
                 .name(company.getName())
-                .owner(new PersonDto(company.getOwner()))
-                .employees(company.getEmployees().stream().map(PersonDto::new).collect(Collectors.toList()))
+                .owner(spyOwner)
+                .employees(spyEmployeeList)
                 .build();
+
+        spyCompany = Mockito.spy(expected);
     }
 
     @Test
     public void testShouldReturnOkWithCreatedCompanyDTo(){
         Mockito.when(formCreationService.create(any())).thenReturn(expected);
 
-        ResponseEntity<CompanyDto> receivedStatus = formController.postCompany(expected);
+        ResponseEntity<CompanyDto> receivedStatus = formController.postCompany(spyCompany);
 
+        Mockito.verify(spyCompany).setId(null);
+        Mockito.verify(spyOwner).setId(null);
+        Mockito.verify(spyEmployeeList).forEach(any());
+        Mockito.verify(spyEmployee, Mockito.times(4)).setId(null);
+        assertNotNull(spyCompany);
         assertEquals("Expected should equals received response entity",ResponseEntity.ok(expected),receivedStatus);
         assertNotNull("Received status mustn't be null", receivedStatus);
     }

@@ -23,7 +23,7 @@ import static lombok.AccessLevel.PRIVATE;
 @AllArgsConstructor(access = PRIVATE)
 @Builder
 @JsonDeserialize(builder = CompanyDto.CompanyDtoBuilder.class)
-public final class CompanyDto{
+public class CompanyDto{
     private Long id;
 
     @NotEmpty

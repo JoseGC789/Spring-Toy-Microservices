@@ -21,7 +21,7 @@ import static lombok.AccessLevel.PRIVATE;
 @AllArgsConstructor(access = PRIVATE)
 @Builder
 @JsonDeserialize(builder = PersonDto.PersonDtoBuilder.class)
-public final class PersonDto{
+public class PersonDto{
     private Long id;
 
     @Size(max = 100)

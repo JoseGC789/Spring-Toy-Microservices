@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
+import static java.util.Objects.requireNonNull;
 
 @RestController
 @Validated
@@ -36,6 +37,7 @@ public class FormController{
     }
 
     private static CompanyDto nullIds(CompanyDto companyDto){
+        requireNonNull(companyDto);
         companyDto.setId(null);
         companyDto.getOwner().setId(null);
         companyDto.getEmployees().forEach(personDto -> personDto.setId(null));

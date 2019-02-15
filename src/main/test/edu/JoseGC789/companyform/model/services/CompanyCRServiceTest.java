@@ -68,7 +68,7 @@ public class CompanyCRServiceTest{
 
     @Test(expected = ResponseStatusException.class)
     public void testShouldThrowResponseExceptionWhenNotFound(){
-        Mockito.when(companyRepository.findById(any())).thenThrow( new ResponseStatusException(NOT_FOUND));
+        Mockito.when(companyRepository.findById(any())).thenReturn(Optional.empty());
 
         companyCRService.read(5L);
     }

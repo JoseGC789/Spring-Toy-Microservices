@@ -20,6 +20,17 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.1.9</version>
+                <configuration>
+                    <targetClasses>
+                        <param>edu.JoseGC789.companyform.controller.*</param>
+                        <param>edu.JoseGC789.companyform.model.services.*</param>
+                    </targetClasses>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
