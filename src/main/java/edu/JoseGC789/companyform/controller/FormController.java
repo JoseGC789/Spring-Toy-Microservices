@@ -33,7 +33,7 @@ public class FormController{
             @ApiResponse(code = 500, message = "Internal server error")
     })
     public ResponseEntity<CompanyDto> postCompany(@Valid @RequestBody final CompanyDto companyBody){
-        return ResponseEntity.ok(formService.create(requireNonNull(nullIds(companyBody))));
+        return ResponseEntity.ok(formService.create(nullIds(companyBody)));
     }
 
     private static CompanyDto nullIds(CompanyDto companyDto){

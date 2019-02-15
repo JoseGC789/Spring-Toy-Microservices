@@ -9,6 +9,7 @@ import edu.JoseGC789.companyform.model.services.FormCreationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -20,6 +21,13 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+
+class NotNullObjects extends ArgumentMatcher<CompanyDto>{
+    public boolean matches(Object object) {
+        return object!=null;
+    }
+}
 
 @RunWith(MockitoJUnitRunner.class)
 public class FormControllerTest{
@@ -71,7 +79,7 @@ public class FormControllerTest{
 
     @Test
     public void testShouldReturnOkWithCreatedCompanyDTo(){
-        Mockito.when(formCreationService.create(any())).thenReturn(expected);
+        Mockito.when(formCreationService.create(argThat(new NotNullObjects()))).thenReturn(expected);
 
         ResponseEntity<CompanyDto> receivedStatus = formController.postCompany(spyCompany);
 
