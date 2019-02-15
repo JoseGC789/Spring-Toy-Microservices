@@ -79,7 +79,6 @@ public class FormControllerTest{
         Mockito.verify(spyOwner).setId(null);
         Mockito.verify(spyEmployeeList).forEach(any());
         Mockito.verify(spyEmployee, Mockito.times(4)).setId(null);
-        assertNotNull(spyCompany);
         assertEquals("Expected should equals received response entity",ResponseEntity.ok(expected),receivedStatus);
         assertNotNull("Received status mustn't be null", receivedStatus);
     }
