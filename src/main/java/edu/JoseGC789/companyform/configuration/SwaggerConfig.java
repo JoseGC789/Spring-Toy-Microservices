@@ -30,7 +30,7 @@ public class SwaggerConfig{
                 .title("Company-Form-Api")
                 .description("Form for companies for a fictitious company")
                 .version("1.0")
-                .contact(new Contact("JoseGC789", "https://github.globant.com/jose-carranza", "josegcarranza@gmail.com"))
+                .contact(new Contact("JoseGC789", "https://github.com/JoseGC789", "josegcarranza@gmail.com"))
                 .build();
     }
 
