@@ -11,6 +11,7 @@
 
     <properties>
         <mutation-test.skip>false</mutation-test.skip>
+        <mutation-threshold>100</mutation-threshold>
 
         <pitest.classes.controller>edu.JoseGC789.companyform.controller.*</pitest.classes.controller>
         <pitest.classes.services>edu.JoseGC789.companyform.model.services.*</pitest.classes.services>
@@ -48,6 +49,7 @@
 
                 <configuration>
                     <skip>${mutation-test.skip}</skip>
+                    <mutationThreshold>${mutation-threshold}</mutationThreshold>
                     <targetClasses>
                         <param>${pitest.classes.controller}</param>
                         <param>${pitest.classes.services}</param>
@@ -77,7 +79,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.version}</version>
-                
+
                 <executions>
                     <execution>
                         <goals>
