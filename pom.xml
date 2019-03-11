@@ -28,6 +28,7 @@
         <lombok.version>1.16.20</lombok.version>
         <junit.version>4.12</junit.version>
         <mockito.version>1.9.5</mockito.version>
+        <guava.version>25.1-jre</guava.version>
     </properties>
 
     <build>
@@ -273,7 +274,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>25.1-jre</version>
+            <version>${guava.version}</version>
         </dependency>
     </dependencies>
 </project>
