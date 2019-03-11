@@ -104,7 +104,7 @@
                     <failBuildOnCVSS>1</failBuildOnCVSS>
                     <outputDirectory>${project.basedir}/target/reports/</outputDirectory>
                     <suppressionFile>
-                        ${project.basedir}/src/test/resources/dependency-check-suppression.xml
+                        ${project.basedir}/src/main/resources/dependency-check-suppression.xml
                     </suppressionFile>
                 </configuration>
                 <executions>
