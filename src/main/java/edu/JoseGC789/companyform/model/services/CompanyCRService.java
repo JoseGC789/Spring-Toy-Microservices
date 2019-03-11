@@ -1,9 +1,9 @@
 package edu.JoseGC789.companyform.model.services;
 
+import com.github.dozermapper.core.Mapper;
 import edu.JoseGC789.companyform.model.domain.dtos.CompanyDto;
 import edu.JoseGC789.companyform.model.domain.entities.Company;
 import edu.JoseGC789.companyform.model.repositories.CompanyRepository;
-import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,9 +15,9 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Qualifier("company")
 public class CompanyCRService implements CRService<CompanyDto, Long>{
     private final CompanyRepository companyRepository;
-    private final DozerBeanMapper mapper;
+    private final Mapper mapper;
 
-    public CompanyCRService(CompanyRepository companyRepository, DozerBeanMapper mapper){
+    public CompanyCRService(CompanyRepository companyRepository, Mapper mapper){
         this.companyRepository = companyRepository;
         this.mapper = mapper;
     }

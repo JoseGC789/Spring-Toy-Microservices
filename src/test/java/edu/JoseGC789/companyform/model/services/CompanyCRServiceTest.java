@@ -1,11 +1,11 @@
 package edu.JoseGC789.companyform.model.services;
 
+import com.github.dozermapper.core.Mapper;
 import edu.JoseGC789.companyform.model.domain.dtos.CompanyDto;
 import edu.JoseGC789.companyform.model.domain.dtos.PersonDto;
 import edu.JoseGC789.companyform.model.domain.entities.Company;
 import edu.JoseGC789.companyform.model.domain.entities.Owner;
 import edu.JoseGC789.companyform.model.repositories.CompanyRepository;
-import org.dozer.DozerBeanMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +28,7 @@ import static org.mockito.Matchers.anyObject;
 public class CompanyCRServiceTest{
 
     @Mock
-    private DozerBeanMapper dozerBeanMapper;
+    private Mapper mapper;
 
     @Mock
     private CompanyRepository companyRepository;
@@ -57,7 +57,7 @@ public class CompanyCRServiceTest{
 
     @Test
     public void testShouldReturnNewlyCreatedCompanyDto(){
-        Mockito.when(dozerBeanMapper.map(anyObject(),any())).thenReturn(company);
+        Mockito.when(mapper.map(anyObject(),any())).thenReturn(company);
         Mockito.when(companyRepository.save(any())).thenReturn(company);
 
         CompanyDto created = companyCRService.create(expected);

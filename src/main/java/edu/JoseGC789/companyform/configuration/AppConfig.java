@@ -1,6 +1,7 @@
 package edu.JoseGC789.companyform.configuration;
 
-import org.dozer.DozerBeanMapper;
+import com.github.dozermapper.core.DozerBeanMapperBuilder;
+import com.github.dozermapper.core.Mapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,8 +9,22 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfig{
 
     @Bean
-    public DozerBeanMapper getMapper(){
-        return new DozerBeanMapper();
+    public Mapper getMapper(){
+        return Dozer.INSTANCE.getMapper();
+    }
+
+    public enum Dozer{
+        INSTANCE(DozerBeanMapperBuilder.buildDefault());
+
+        private final Mapper mapper;
+
+        Dozer(Mapper mapper){
+            this.mapper = mapper;
+        }
+
+        public Mapper getMapper(){
+            return mapper;
+        }
     }
 
 }
