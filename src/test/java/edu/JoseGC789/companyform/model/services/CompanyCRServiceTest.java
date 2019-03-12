@@ -1,8 +1,8 @@
 package edu.JoseGC789.companyform.model.services;
 
-import com.github.dozermapper.core.Mapper;
+import edu.JoseGC789.companyform.model.domain.mapper.CompanyMapper;
+import edu.JoseGC789.companyform.model.domain.mapper.PersonMapper;
 import edu.JoseGC789.companyform.model.domain.dtos.CompanyDto;
-import edu.JoseGC789.companyform.model.domain.dtos.PersonDto;
 import edu.JoseGC789.companyform.model.domain.entities.Company;
 import edu.JoseGC789.companyform.model.domain.entities.Owner;
 import edu.JoseGC789.companyform.model.repositories.CompanyRepository;
@@ -22,13 +22,12 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompanyCRServiceTest{
 
     @Mock
-    private Mapper mapper;
+    private CompanyMapper mapper;
 
     @Mock
     private CompanyRepository companyRepository;
@@ -42,6 +41,7 @@ public class CompanyCRServiceTest{
 
     @Before
     public void setup(){
+        PersonMapper mapper = PersonMapper.INSTANCE;
         company = new Company(1L,"company_name", new Owner(), Collections.emptyList());
         company.getOwner().setId(1L);
         company.getOwner().setName("Owner name");
@@ -49,15 +49,16 @@ public class CompanyCRServiceTest{
         expected = builder
                 .id(company.getId())
                 .name(company.getName())
-                .owner(new PersonDto(company.getOwner()))
-                .employees(company.getEmployees().stream().map(PersonDto::new).collect(Collectors.toList()))
+                .owner(mapper.personToDto(company.getOwner()))
+                .employees(company.getEmployees().stream().map(mapper::personToDto).collect(Collectors.toList()))
                 .build();
         expectedList = Arrays.asList(expected, expected, expected);
     }
 
     @Test
     public void testShouldReturnNewlyCreatedCompanyDto(){
-        Mockito.when(mapper.map(anyObject(),any())).thenReturn(company);
+        Mockito.when(mapper.dtoToCompany(any())).thenReturn(company);
+        Mockito.when(mapper.companyToDto(any())).thenReturn(expected);
         Mockito.when(companyRepository.save(any())).thenReturn(company);
 
         CompanyDto created = companyCRService.create(expected);
@@ -75,6 +76,7 @@ public class CompanyCRServiceTest{
     @Test
     public void testShouldReturnCompanyDtoFoundInRepo(){
         Mockito.when(companyRepository.findById(any())).thenReturn(Optional.of(company));
+        Mockito.when(mapper.companyToDto(any())).thenReturn(expected);
 
         CompanyDto found = companyCRService.read(5L);
 
@@ -85,6 +87,7 @@ public class CompanyCRServiceTest{
     @Test
     public void testShouldReturListOfCompanyDtoFoundInRepo(){
         Mockito.when(companyRepository.findAll()).thenReturn(Arrays.asList(company,company,company));
+        Mockito.when(mapper.companyToDto(any())).thenReturn(expected);
 
         List<CompanyDto> foundList = companyCRService.readAll();
 

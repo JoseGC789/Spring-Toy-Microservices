@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
-import static java.util.Objects.requireNonNull;
 
 @RestController
 @Validated
@@ -33,13 +32,6 @@ public class FormController{
             @ApiResponse(code = 500, message = "Internal server error")
     })
     public ResponseEntity<CompanyDto> postCompany(@Valid @RequestBody final CompanyDto companyBody){
-        return ResponseEntity.ok(formService.create(nullIds(companyBody)));
-    }
-
-    private static CompanyDto nullIds(CompanyDto companyDto){
-        companyDto.setId(null);
-        companyDto.getOwner().setId(null);
-        companyDto.getEmployees().forEach(personDto -> personDto.setId(null));
-        return companyDto;
+        return ResponseEntity.ok(formService.create(companyBody));
     }
 }

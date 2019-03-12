@@ -1,7 +1,7 @@
 package edu.JoseGC789.companyform.controller;
 
+import edu.JoseGC789.companyform.model.domain.mapper.PersonMapper;
 import edu.JoseGC789.companyform.model.domain.dtos.CompanyDto;
-import edu.JoseGC789.companyform.model.domain.dtos.PersonDto;
 import edu.JoseGC789.companyform.model.domain.entities.Company;
 import edu.JoseGC789.companyform.model.domain.entities.Owner;
 import edu.JoseGC789.companyform.model.services.CompanyCRService;
@@ -36,6 +36,7 @@ public class CompanyControllerTest{
 
     @Before
     public void setup(){
+        PersonMapper mapper = PersonMapper.INSTANCE;
         company = new Company(1L, "company_name", new Owner(), Collections.emptyList());
         company.getOwner().setId(1L);
         company.getOwner().setName("Owner name");
@@ -43,8 +44,8 @@ public class CompanyControllerTest{
         expected = builder
                 .id(company.getId())
                 .name(company.getName())
-                .owner(new PersonDto(company.getOwner()))
-                .employees(company.getEmployees().stream().map(PersonDto::new).collect(Collectors.toList()))
+                .owner(mapper.personToDto(company.getOwner()))
+                .employees(company.getEmployees().stream().map(mapper::personToDto).collect(Collectors.toList()))
                 .build();
         expectedList = Arrays.asList(expected, expected, expected);
     }

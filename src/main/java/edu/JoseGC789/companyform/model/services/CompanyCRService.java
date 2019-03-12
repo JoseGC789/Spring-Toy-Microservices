@@ -1,6 +1,6 @@
 package edu.JoseGC789.companyform.model.services;
 
-import com.github.dozermapper.core.Mapper;
+import edu.JoseGC789.companyform.model.domain.mapper.CompanyMapper;
 import edu.JoseGC789.companyform.model.domain.dtos.CompanyDto;
 import edu.JoseGC789.companyform.model.domain.entities.Company;
 import edu.JoseGC789.companyform.model.repositories.CompanyRepository;
@@ -15,30 +15,30 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Qualifier("company")
 public class CompanyCRService implements CRService<CompanyDto, Long>{
     private final CompanyRepository companyRepository;
-    private final Mapper mapper;
+    private final CompanyMapper mapper;
 
-    public CompanyCRService(CompanyRepository companyRepository, Mapper mapper){
+    public CompanyCRService(CompanyRepository companyRepository, CompanyMapper companyMapper){
         this.companyRepository = companyRepository;
-        this.mapper = mapper;
+        this.mapper = companyMapper;
     }
 
     @Override
     public CompanyDto create(final CompanyDto companyDTO){
-        final Company company = companyRepository.save(mapper.map(companyDTO,Company.class));
-        return new CompanyDto(company);
+        final Company company = companyRepository.save(mapper.dtoToCompany(companyDTO));
+        return mapper.companyToDto(company);
     }
 
     @Override
     public CompanyDto read(final Long id){
          return companyRepository.findById(id)
-                 .map(CompanyDto::new)
+                 .map(mapper::companyToDto)
                  .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Company doesn't exists"));
     }
 
     @Override
     public List<CompanyDto> readAll(){
         return companyRepository.findAll().stream()
-                .map(CompanyDto::new)
+                .map(mapper::companyToDto)
                 .collect(Collectors.toList());
     }
 }
