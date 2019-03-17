@@ -1,0 +1,1 @@
+mvn sonar:sonar -Dsonar.host.url=http://localhost:9000    -Dsonar.login=3ab202b99d880da4ddd33811e74d2ef2c1a63733
