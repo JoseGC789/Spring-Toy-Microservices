@@ -14,20 +14,14 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.argThat;
-
-class NotNullObjects extends ArgumentMatcher<CompanyDto>{
-    public boolean matches(Object object) {
-        return object!=null;
-    }
-}
+import static org.mockito.ArgumentMatchers.argThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FormControllerTest{
@@ -39,7 +33,6 @@ public class FormControllerTest{
     private FormController formController;
 
     private CompanyDto expected;
-
     private PersonDto spyOwner;
     private CompanyDto spyCompany;
     private List<PersonDto> spyEmployeeList;
@@ -86,5 +79,12 @@ public class FormControllerTest{
 
         assertEquals("Expected should equals received response entity",ResponseEntity.ok(expected),receivedStatus);
         assertNotNull("Received status mustn't be null", receivedStatus);
+    }
+
+    public static class NotNullObjects implements ArgumentMatcher<CompanyDto>{
+        @Override
+        public boolean matches(CompanyDto companyDto){
+            return companyDto!=null;
+        }
     }
 }
