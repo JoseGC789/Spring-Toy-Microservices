@@ -5,7 +5,6 @@ import edu.josegc789.companyform.model.services.CRService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,10 +15,9 @@ import java.util.List;
 public class CompanyController{
     private final CRService<CompanyDto, Long> companyService;
 
-    public CompanyController(@Qualifier("company") CRService<CompanyDto, Long> companyService){
+    public CompanyController(CRService<CompanyDto, Long> companyService){
         this.companyService = companyService;
     }
-
 
     @GetMapping("/form/companies/{id}")
     @ApiOperation(
