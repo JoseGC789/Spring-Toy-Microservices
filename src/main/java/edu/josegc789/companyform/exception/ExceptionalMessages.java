@@ -21,7 +21,9 @@ public enum ExceptionalMessages {
 
     public static String of(Throwable exception){
         Matcher matcher = Pattern.compile(REGEX).matcher(exception.getMessage());
-        matcher.find();
-        return matcher.group(0);
+        if(matcher.find()){
+            return matcher.group(0);
+        }
+        return "";
     }
 }
