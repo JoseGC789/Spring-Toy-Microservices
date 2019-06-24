@@ -15,10 +15,10 @@ import java.util.UUID;
 @Slf4j
 public class AsyncService{
 
-    private final SabreSspFailure ssp;
+    private final ExternalFailingService ssp;
     private final UUID reqId = UUID.randomUUID();
 
-    public AsyncService(SabreSspFailure ssp){
+    public AsyncService(ExternalFailingService ssp){
         this.ssp = ssp;
     }
 

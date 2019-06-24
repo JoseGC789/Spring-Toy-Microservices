@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 @Slf4j
-public class SabreSspFailure{
+public class ExternalFailingService{
     private AtomicInteger sspCounter = new AtomicInteger(3);
 
     public String doTheFail(String num){
