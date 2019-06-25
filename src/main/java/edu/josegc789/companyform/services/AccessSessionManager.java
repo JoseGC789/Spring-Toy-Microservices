@@ -1,4 +1,4 @@
-package edu.josegc789.companyform.model.services;
+package edu.josegc789.companyform.services;
 
 import org.springframework.stereotype.Service;
 import java.util.Random;

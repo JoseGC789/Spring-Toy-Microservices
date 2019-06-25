@@ -1,4 +1,4 @@
-package edu.josegc789.companyform.model.services;
+package edu.josegc789.companyform.services;
 
 import edu.josegc789.companyform.exception.CancelledRequestException;
 import edu.josegc789.companyform.exception.ExceptionalMessages;
@@ -36,12 +36,12 @@ public class DocumentService {
             List<String> str = completableTree.get();
             str.forEach(builder::append);
             endResult = builder.toString();
-
-        } catch (Exception exception) {
-            endResult = ExceptionalMessages.of(exception);
-            listenableFutures.forEach(listenable -> listenable.cancel(true));
-        } finally{
             sessionManager.releaseSession(session);
+
+        } catch (Exception exception){
+            endResult = ExceptionalMessages.of(exception);
+            sessionManager.closeSession(session);
+            listenableFutures.forEach(listenable -> listenable.cancel(true));
         }
         return endResult;
     }
@@ -66,7 +66,6 @@ public class DocumentService {
                     stringCompletableFuture.get();
                 }
             }
-            Thread.sleep(50);
         }
     }
 

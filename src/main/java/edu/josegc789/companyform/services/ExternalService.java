@@ -1,4 +1,4 @@
-package edu.josegc789.companyform.model.services;
+package edu.josegc789.companyform.services;
 
 import edu.josegc789.companyform.exception.AccessSessionException;
 import edu.josegc789.companyform.exception.CancelledRequestException;
