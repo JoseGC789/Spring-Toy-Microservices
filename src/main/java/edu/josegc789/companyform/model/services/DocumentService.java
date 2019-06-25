@@ -28,25 +28,11 @@ public class DocumentService {
         StringBuilder builder = new StringBuilder();
         String endResult;
 
-        List<ListenableFuture<String>> listenableFutures = getListenableFutures(5);
-
-        List<CompletableFuture<String>> completableFutures = listenableFutures.stream()
-                .map(ListenableFuture::completable)
-                .collect(Collectors.toList());
-
-        CompletableFuture<List<String>> completableTree = CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[0]))
-                .thenApply(v -> completableFutures.stream()
-                        .map(CompletableFuture::join)
-                        .collect(Collectors.toList()));
+        List<ListenableFuture<String>> listenableFutures = callAsyncService(11);
+        List<CompletableFuture<String>> completableFutures = toCompletable(listenableFutures);
+        CompletableFuture<List<String>> completableTree = buildTree(completableFutures);
         try{
-            while(!completableTree.isDone()){
-                for(CompletableFuture<String> stringCompletableFuture : completableFutures){
-                    if(stringCompletableFuture.isCompletedExceptionally()){
-                        stringCompletableFuture.get();
-                    }
-                }
-                Thread.sleep(50);
-            }
+            isCompletedSuccessfully(completableFutures, completableTree);
             List<String> str = completableTree.get();
             str.forEach(builder::append);
             endResult = builder.toString();
@@ -60,7 +46,31 @@ public class DocumentService {
         return endResult;
     }
 
-    private List<ListenableFuture<String>> getListenableFutures(int amount) {
+    private List<CompletableFuture<String>> toCompletable(List<ListenableFuture<String>> listenableFutures) {
+        return listenableFutures.stream()
+                .map(ListenableFuture::completable)
+                .collect(Collectors.toList());
+    }
+
+    private CompletableFuture<List<String>> buildTree(List<CompletableFuture<String>> completableFutures) {
+        return CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[0]))
+                .thenApply(v -> completableFutures.stream()
+                        .map(CompletableFuture::join)
+                        .collect(Collectors.toList()));
+    }
+
+    private void isCompletedSuccessfully(List<CompletableFuture<String>> completableFutures, CompletableFuture<List<String>> completableTree) throws InterruptedException, java.util.concurrent.ExecutionException {
+        while(!completableTree.isDone()){
+            for(CompletableFuture<String> stringCompletableFuture : completableFutures){
+                if(stringCompletableFuture.isCompletedExceptionally()){
+                    stringCompletableFuture.get();
+                }
+            }
+            Thread.sleep(50);
+        }
+    }
+
+    private List<ListenableFuture<String>> callAsyncService(int amount) {
         List<ListenableFuture<String>> contentList = new ArrayList<>();
         for(int i = 0; i < amount; i++){
             try{

@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import static java.time.temporal.ChronoUnit.MILLIS;
 
@@ -20,13 +22,18 @@ public class DisplayMessageController {
     }
 
     @GetMapping("/async")
-    public ResponseEntity<String> testAsync() {
+    public ResponseEntity<Map<String, String>> testAsync() {
         LocalTime begin = LocalTime.now();
-        StringBuilder builder = new StringBuilder();
         String elapsed = "";
         String endResult = documentService.acquireDocument();
         elapsed = elapsed + MILLIS.between(begin,  LocalTime.now()) + "ms";
         log.info("Elapsed time: " + elapsed);
-        return ResponseEntity.ok(endResult + " --- " + elapsed + " --- " + new Random().nextInt(100));
+        return ResponseEntity.ok(build(elapsed, endResult));
+    }
+
+    private Map<String, String> build(String elapsed, String endResult) {
+        Map<String, String> result = new HashMap<>();
+        result.put("value", endResult + " --- " + elapsed + " --- " + new Random().nextInt(100));
+        return result;
     }
 }
