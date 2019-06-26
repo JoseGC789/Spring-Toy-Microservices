@@ -21,6 +21,7 @@ public class AsyncService{
     private final UUID reqId = UUID.randomUUID();
     @Setter
     private AccessSessionManager.AccessSession session;
+    private boolean hasFinisher;
 
     public AsyncService(ExternalService ssp){
         this.ssp = ssp;
@@ -35,13 +36,25 @@ public class AsyncService{
         } catch (CancelledRequestException e){
             logStop(e.getMessage());
             throw e;
+        }finally{
+            hasFinisher = true;
+            synchronized(this){
+                notifyAll();
+            }
         }
-
         log.info(Thread.currentThread().getName() + " ended. --- " + reqId);
         return new AsyncResult<>(result);
     }
 
     private void logStop(String message) {
         log.error(Thread.currentThread().getName() + " stopped because: " + message + " --- " + reqId);
+    }
+
+    public void hasFinisher() throws InterruptedException{
+        synchronized(this){
+            while(!hasFinisher){
+                wait(5000);
+            }
+        }
     }
 }

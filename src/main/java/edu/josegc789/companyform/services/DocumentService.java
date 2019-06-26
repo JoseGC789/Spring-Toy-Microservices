@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +30,7 @@ public class DocumentService {
         StringBuilder builder = new StringBuilder();
         String endResult;
 
-        List<ListenableFuture<String>> listenableFutures = callAsyncService(11);
+        List<ListenableFuture<String>> listenableFutures = callAsyncService(4);
         List<CompletableFuture<String>> completableFutures = toCompletable(listenableFutures);
         CompletableFuture<List<String>> completableTree = buildTree(completableFutures);
         try{
@@ -38,7 +40,7 @@ public class DocumentService {
             endResult = builder.toString();
             sessionManager.releaseSession(session);
 
-        } catch (Exception exception){
+        } catch (ExecutionException | InterruptedException exception){
             endResult = ExceptionalMessages.of(exception);
             sessionManager.closeSession(session);
             listenableFutures.forEach(listenable -> listenable.cancel(true));
@@ -59,7 +61,8 @@ public class DocumentService {
                         .collect(Collectors.toList()));
     }
 
-    private void isCompletedSuccessfully(List<CompletableFuture<String>> completableFutures, CompletableFuture<List<String>> completableTree) throws InterruptedException, java.util.concurrent.ExecutionException {
+    private void isCompletedSuccessfully(List<CompletableFuture<String>> completableFutures, CompletableFuture<List<String>> completableTree) throws java.util.concurrent.ExecutionException, InterruptedException{
+        asyncService.hasFinisher();
         while(!completableTree.isDone()){
             for(CompletableFuture<String> stringCompletableFuture : completableFutures){
                 if(stringCompletableFuture.isCompletedExceptionally()){
