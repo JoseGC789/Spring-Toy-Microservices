@@ -80,11 +80,18 @@ public class DocumentService {
 
     private void isCompletedSuccessfully(List<CompletableFuture<String>> completableFutures, CompletableFuture<List<String>> completableTree) throws java.util.concurrent.ExecutionException, InterruptedException{
         asyncService.hasFinisher();
-        while(!completableTree.isDone()){
-            for(CompletableFuture<String> stringCompletableFuture : completableFutures){
-                if(stringCompletableFuture.isCompletedExceptionally()){
-                    stringCompletableFuture.get();
+        try{
+            while(!completableTree.isDone()){
+                for(CompletableFuture<String> stringCompletableFuture : completableFutures){
+                    if(stringCompletableFuture.isCompletedExceptionally()){
+                        stringCompletableFuture.get();
+                    }
                 }
+            }
+        } catch(ExecutionException e){
+            String message = ExceptionalMessages.of(e);
+            if(ExceptionalMessages.INVALID_SESSION.getMessage().equals(message)){
+                throw e;
             }
         }
     }
