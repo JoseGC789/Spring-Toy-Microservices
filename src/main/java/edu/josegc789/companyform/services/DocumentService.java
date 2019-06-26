@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -24,28 +23,46 @@ public class DocumentService {
         this.sessionManager = sessionManager;
     }
 
-    public String acquireDocument() {
+    public String acquireDocument(int amount) throws ExecutionException, InterruptedException {
         AccessSessionManager.AccessSession session = sessionManager.acquireSession();
         asyncService.setSession(session);
         StringBuilder builder = new StringBuilder();
         String endResult;
 
-        List<ListenableFuture<String>> listenableFutures = callAsyncService(4);
+        List<ListenableFuture<String>> listenableFutures = callAsyncService(amount);
         List<CompletableFuture<String>> completableFutures = toCompletable(listenableFutures);
         CompletableFuture<List<String>> completableTree = buildTree(completableFutures);
         try{
             isCompletedSuccessfully(completableFutures, completableTree);
-            List<String> str = completableTree.get();
-            str.forEach(builder::append);
-            endResult = builder.toString();
+            endResult = getSuccessful(builder, completableTree);
             sessionManager.releaseSession(session);
 
         } catch (ExecutionException | InterruptedException exception){
-            endResult = ExceptionalMessages.of(exception);
-            sessionManager.closeSession(session);
-            listenableFutures.forEach(listenable -> listenable.cancel(true));
+            String message = ExceptionalMessages.of(exception);
+            if(ExceptionalMessages.INVALID_SESSION.getMessage().equals(message)){
+                sessionManager.closeSession(session);
+                listenableFutures.forEach(listenable -> listenable.cancel(true));
+                endResult = message;
+            } else {
+                endResult = getPartially(builder, completableFutures);
+                sessionManager.releaseSession(session);
+            }
         }
         return endResult;
+    }
+
+    private String getSuccessful(StringBuilder builder, CompletableFuture<List<String>> completableTree) throws InterruptedException, ExecutionException {
+        List<String> str = completableTree.get();
+        str.forEach(builder::append);
+        return builder.toString();
+    }
+
+    private String getPartially(StringBuilder builder, List<CompletableFuture<String>> completableFutures) throws ExecutionException, InterruptedException {
+        List<CompletableFuture<String>> successful = completableFutures.stream()
+                .filter(future -> !future.isCompletedExceptionally())
+                .collect(Collectors.toList());
+        buildTree(successful).get().forEach(builder::append);
+        return builder.toString();
     }
 
     private List<CompletableFuture<String>> toCompletable(List<ListenableFuture<String>> listenableFutures) {

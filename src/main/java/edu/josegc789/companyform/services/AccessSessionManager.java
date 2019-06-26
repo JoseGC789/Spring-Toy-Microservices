@@ -21,7 +21,7 @@ public class AccessSessionManager {
     public final static class AccessSession{
         private static final Random FAILURE_CHANCE = new Random();
         private static final int UNUSABLE = 0;
-        private static final int BOUND = 10;
+        private static final int BOUND = 5;
         private int usable;
 
         private AccessSession(int usable) {
