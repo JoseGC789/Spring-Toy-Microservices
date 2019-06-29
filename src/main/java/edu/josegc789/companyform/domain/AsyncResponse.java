@@ -9,7 +9,7 @@ import java.util.Random;
 @Getter
 @Value
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class AsyncResponse {
+public final class AsyncResponse {
     private static final Random ID = new Random();
     private static final int BOUND = 100;
     private String value;

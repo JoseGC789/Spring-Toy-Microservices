@@ -1,34 +1,25 @@
 package edu.josegc789.companyform.services;
 
-import edu.josegc789.companyform.exception.AccessSessionException;
+import edu.josegc789.companyform.domain.ExternalRequest;
 import edu.josegc789.companyform.exception.ExceptionalMessages;
 import edu.josegc789.companyform.exception.RandomExternalError;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import org.springframework.stereotype.Service;
+import static edu.josegc789.companyform.services.FailGenerator.EXTERNAL;
 
-@Component
+@Service
 @Slf4j
 public class ExternalService {
-    private static final Random RANDOM = ThreadLocalRandom.current();
-    private static final int BOUND = 10;
 
-    public String doTheFail(String num, AccessSessionManager.AccessSession session) throws Exception {
-        checkSession(session);
+    public String doTheFail(String num, ExternalRequest payload) throws Exception {
+        payload.isUsable();
         failRandomly();
         Thread.sleep(500);
         return num;
     }
 
-    private void checkSession(AccessSessionManager.AccessSession session) throws AccessSessionException{
-        if(session.isUnusable()){
-            throw new AccessSessionException(ExceptionalMessages.INVALID_SESSION);
-        }
-    }
-
     private void failRandomly() throws RandomExternalError{
-        if(RANDOM.nextInt(BOUND) == 0){
+        if(EXTERNAL.hasFailed()){
             throw new RandomExternalError(ExceptionalMessages.EXTERNAL_ERROR);
         }
     }

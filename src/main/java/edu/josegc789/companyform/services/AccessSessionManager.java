@@ -1,7 +1,7 @@
 package edu.josegc789.companyform.services;
 
 import org.springframework.stereotype.Service;
-import java.util.Random;
+import static edu.josegc789.companyform.services.FailGenerator.SESSION;
 
 @Service
 public class AccessSessionManager {
@@ -19,25 +19,22 @@ public class AccessSessionManager {
     }
 
     public final static class AccessSession{
-        private static final Random FAILURE_CHANCE = new Random();
-        private static final int UNUSABLE = 0;
-        private static final int BOUND = 1;
-        private int usable;
+        private boolean unusable;
 
-        private AccessSession(int usable) {
-            this.usable = usable;
+        private AccessSession(boolean unusable) {
+            this.unusable = unusable;
         }
 
         private static AccessSession acquire(){
-            return new AccessSession(FAILURE_CHANCE.nextInt(BOUND));
+            return new AccessSession(SESSION.hasFailed());
         }
 
         public boolean isUnusable(){
-            return usable == UNUSABLE;
+            return unusable;
         }
 
         private void finish(){
-            usable = UNUSABLE;
+            unusable = false;
         }
     }
 }

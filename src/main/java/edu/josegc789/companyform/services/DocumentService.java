@@ -1,52 +1,52 @@
 package edu.josegc789.companyform.services;
 
+import edu.josegc789.companyform.domain.ExternalRequest;
 import edu.josegc789.companyform.exception.ExceptionalMessages;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 @Service
-@Slf4j
 public class DocumentService {
 
-    private final AsyncService asyncService;
+    private final AsyncSubmitterService asyncService;
     private final AccessSessionManager sessionManager;
 
-    public DocumentService(AsyncService asyncService, AccessSessionManager sessionManager) {
+    public DocumentService(AsyncSubmitterService asyncService, AccessSessionManager sessionManager) {
         this.asyncService = asyncService;
         this.sessionManager = sessionManager;
     }
 
     public String acquireDocument(int amount) throws Exception {
         StringBuilder builder = new StringBuilder();
-        final CountDownLatch latch = new CountDownLatch(amount);
         AccessSessionManager.AccessSession session = sessionManager.acquireSession();
-        asyncService.setLatch(latch);
-        asyncService.setSession(session);
-        List<Future<String>> listenableFutures = callAsyncService(amount);
-        latch.await();
+        ExternalRequest request = ExternalRequest.from(amount, session);
+        List<Future<String>> listenableNum = submitTasks(amount, request);
+        request.awaitCompletion();
         try{
-            for(Future<String> future : listenableFutures){
-                builder.append(future.get());
+            for(Future<String> num : listenableNum){
+                builder.append(num.get());
             }
             sessionManager.releaseSession(session);
         } catch (ExecutionException | InterruptedException exception){
             sessionManager.closeSession(session);
-            listenableFutures.forEach(listenable -> listenable.cancel(true));
+            cancelTasks(listenableNum);
             builder = new StringBuilder(ExceptionalMessages.of(exception));
         }
         return builder.toString();
     }
 
-    private List<Future<String>> callAsyncService(int amount) throws Exception{
-        List<Future<String>> contentList = new ArrayList<>();
+    private void cancelTasks(List<Future<String>> listenableNum){
+        listenableNum.forEach(listenable -> listenable.cancel(true));
+    }
+
+    private List<Future<String>> submitTasks(int amount, ExternalRequest payload) throws Exception{
+        List<Future<String>> listenableFutures = new ArrayList<>();
         for(int i = 0; i < amount; i++){
-            contentList.add(asyncService.doAsync(String.valueOf(i)));
+            listenableFutures.add(asyncService.doAsync(String.valueOf(i), payload));
         }
-        return contentList;
+        return listenableFutures;
     }
 }

@@ -30,7 +30,6 @@ public class DisplayMessageController {
         String endResult = documentService.acquireDocument(Math.abs(amount));
         elapsed = elapsed + MILLIS.between(begin,  LocalTime.now()) + "ms";
         log.info("Elapsed time: " + elapsed);
-
         if(amount.equals(endResult.length())){
             return ResponseEntity.ok(AsyncResponse.of(endResult, elapsed));
         } else {
