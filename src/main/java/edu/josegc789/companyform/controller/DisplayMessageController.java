@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalTime;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import static java.time.temporal.ChronoUnit.MILLIS;
 
 @Slf4j
@@ -26,7 +24,7 @@ public class DisplayMessageController {
     }
 
     @GetMapping("/async/{amount}")
-    public ResponseEntity<AsyncResponse> testAsync(@PathVariable(required = false) Integer amount) throws ExecutionException, InterruptedException {
+    public ResponseEntity<AsyncResponse> testAsync(@PathVariable(required = false) Integer amount) throws Exception{
         LocalTime begin = LocalTime.now();
         String elapsed = "";
         String endResult = documentService.acquireDocument(Math.abs(amount));
@@ -44,7 +42,7 @@ public class DisplayMessageController {
     }
 
     @GetMapping({"/async/0","/async"})
-    public ResponseEntity<AsyncResponse> testAsync() throws ExecutionException, InterruptedException {
+    public ResponseEntity<AsyncResponse> testAsync() throws Exception{
         return testAsync(DEFAULT);
     }
 }

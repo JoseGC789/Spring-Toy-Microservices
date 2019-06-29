@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 
 public enum ExceptionalMessages {
     INVALID_SESSION("Session is invalid"),
-    INTERRUPTED_REQUEST("Request was interrupted"),
     EXTERNAL_ERROR("External Service Error");
 
     private static final String REGEX = " \\W?.*";
