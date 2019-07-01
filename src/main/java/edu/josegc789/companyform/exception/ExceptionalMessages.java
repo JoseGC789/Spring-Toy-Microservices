@@ -14,8 +14,12 @@ public enum ExceptionalMessages {
         this.message = message;
     }
 
-    public String getMessage(){
+    String getMessage(){
         return message;
+    }
+
+    public boolean equals(String str){
+        return message.equals(str);
     }
 
     public static String of(Throwable exception){

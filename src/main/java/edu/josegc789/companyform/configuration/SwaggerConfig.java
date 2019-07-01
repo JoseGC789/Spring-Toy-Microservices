@@ -28,7 +28,7 @@ public class SwaggerConfig{
     private ApiInfo info() {
         return new ApiInfoBuilder()
                 .title("Async-Test-Api")
-                .description("Quick test for asynchronous calls to an external service with various types of failure")
+                .description("Quick test for asynchronous calls to an external service with various types from failure")
                 .version("1.0")
                 .contact(new Contact("josegc789", "https://github.com/josegc789", "josegcarranza@gmail.com"))
                 .build();
