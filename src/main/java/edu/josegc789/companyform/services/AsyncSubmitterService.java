@@ -2,16 +2,14 @@ package edu.josegc789.companyform.services;
 
 import edu.josegc789.companyform.domain.ExternalRequest;
 import edu.josegc789.companyform.exception.AccessSessionException;
-import edu.josegc789.companyform.exception.RandomExternalError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 import java.util.UUID;
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -26,7 +24,7 @@ public class AsyncSubmitterService{
     }
 
     @Async
-    public Future<String> doAsync(String num, ExternalRequest payload) throws Exception {
+    public CompletableFuture<String> doAsync(String num, ExternalRequest payload) throws Exception {
         log.info(Thread.currentThread().getName() + " began. --- " + reqId);
         String result = "";
         try{
@@ -35,13 +33,13 @@ public class AsyncSubmitterService{
             logStop(ex.getMessage());
             payload.invalidate();
             throw ex;
-        } catch (RandomExternalError ex){
+        } catch (Exception ex){
             logStop(ex.getMessage());
         }finally{
             payload.countDown();
         }
         log.info(Thread.currentThread().getName() + " ended. --- " + reqId);
-        return new AsyncResult<>(result);
+        return CompletableFuture.completedFuture(result);
     }
 
     private void logStop(String message) {

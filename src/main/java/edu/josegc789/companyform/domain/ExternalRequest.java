@@ -16,7 +16,8 @@ public final class ExternalRequest{
         return new ExternalRequest(session, new CountDownLatch(amount));
     }
 
-    public void isUsable() throws AccessSessionException{
+    public void isUnusable() throws AccessSessionException, InterruptedException {
+        Thread.sleep(300);
         if(session.isUnusable()){
             throw new AccessSessionException(ExceptionalMessages.INVALID_SESSION);
         }

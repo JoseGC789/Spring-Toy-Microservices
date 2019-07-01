@@ -34,7 +34,7 @@ public class AccessSessionManager {
         }
 
         private void finish(){
-            unusable = false;
+            unusable = true;
         }
     }
 }

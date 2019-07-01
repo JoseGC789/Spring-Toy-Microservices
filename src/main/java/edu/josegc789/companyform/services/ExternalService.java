@@ -12,9 +12,9 @@ import static edu.josegc789.companyform.services.FailGenerator.EXTERNAL;
 public class ExternalService {
 
     public String doTheFail(String num, ExternalRequest payload) throws Exception {
-        payload.isUsable();
+        payload.isUnusable();
         failRandomly();
-        Thread.sleep(500);
+        Thread.sleep(300);
         return num;
     }
 
