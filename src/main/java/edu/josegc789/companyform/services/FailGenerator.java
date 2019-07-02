@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public enum FailGenerator{
-    SESSION(6),
+    SESSION(5),
     EXTERNAL(4);
 
     private static final Random RANDOM = ThreadLocalRandom.current();

@@ -1,13 +1,9 @@
 package edu.josegc789.companyform.exception;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public enum ExceptionalMessages {
     INVALID_SESSION("Session is invalid"),
     EXTERNAL_ERROR("External Service Error");
 
-    private static final String REGEX = " \\W?.*";
     private final String message;
 
     ExceptionalMessages(String message) {
@@ -20,13 +16,5 @@ public enum ExceptionalMessages {
 
     public boolean equals(String str){
         return message.equals(str);
-    }
-
-    public static String of(Throwable exception){
-        Matcher matcher = Pattern.compile(REGEX).matcher(exception.getMessage());
-        if(matcher.find()){
-            return matcher.group(0).trim();
-        }
-        return "";
     }
 }

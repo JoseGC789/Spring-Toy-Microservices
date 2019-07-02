@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 @Service
 @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -24,18 +25,17 @@ public class AsyncSubmitterService{
     }
 
     @Async
-    public CompletableFuture<String> doAsync(String num, ExternalRequest payload) throws Exception {
+    public Future<String> doAsync(String num, ExternalRequest payload) {
         log.info(Thread.currentThread().getName() + " began. --- " + reqId);
         String result = "";
-        try{
+        try {
             result = ssp.doTheFail(num, payload);
-        } catch(AccessSessionException | InterruptedException ex){
+        } catch (AccessSessionException | InterruptedException ex){
             logStop(ex.getMessage());
-            payload.invalidate();
-            throw ex;
+            payload.invalidate(ex);
         } catch (Exception ex){
             logStop(ex.getMessage());
-        }finally{
+        } finally {
             payload.countDown();
         }
         log.info(Thread.currentThread().getName() + " ended. --- " + reqId);

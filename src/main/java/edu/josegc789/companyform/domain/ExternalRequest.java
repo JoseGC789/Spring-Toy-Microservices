@@ -6,14 +6,24 @@ import edu.josegc789.companyform.services.AccessSessionManager;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ExternalRequest{
     private final AccessSessionManager.AccessSession session;
     private final CountDownLatch latch;
+    private final AtomicReference<Exception> exceptional;
 
     public static ExternalRequest from(int amount, AccessSessionManager.AccessSession session){
-        return new ExternalRequest(session, new CountDownLatch(amount));
+        return new ExternalRequest(session, new CountDownLatch(amount), new AtomicReference<>(null));
+    }
+
+    public Exception getExceptional(){
+        return exceptional.get();
+    }
+
+    public boolean isExceptional(){
+        return exceptional.get() != null;
     }
 
     public void isUnusable() throws AccessSessionException, InterruptedException {
@@ -23,7 +33,8 @@ public final class ExternalRequest{
         }
     }
 
-    public void invalidate(){
+    public void invalidate(Exception ex){
+        exceptional.compareAndSet(null, ex);
         while(latch.getCount() > 0){
             latch.countDown();
         }
